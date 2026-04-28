@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEX ADMIN PANEL</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Particle Background -->
+  <div id="particles-bg"></div>
+
+  <!-- NOISE TEXTURE OVERLAY -->
+  <div class="noise-overlay"></div>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="login-screen" class="screen active">
+    <div class="login-container glass-panel squircle-lg">
+      <div class="panel-banner">
+        <div class="banner-glitch" data-text="MEX ADMIN PANEL">MEX ADMIN PANEL</div>
+        <div class="banner-sub">SECURE OPERATIONS CENTER</div>
+        <div class="banner-line"></div>
+      </div>
+
+      <div class="login-form">
+        <div class="input-group">
+          <label><i class="fa fa-key"></i> ACCESS KEY</label>
+          <div class="input-wrapper">
+            <input type="password" id="login-key-input" placeholder="Enter your access key..." autocomplete="off" />
+            <button class="eye-toggle" onclick="toggleVisibility('login-key-input', this)">
+              <i class="fa fa-eye-slash"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary pulse-glow" onclick="attemptLogin()">
+          <i class="fa fa-shield-halved"></i> AUTHENTICATE
+        </button>
+        <div id="login-error" class="error-msg hidden">
+          <i class="fa fa-triangle-exclamation"></i> <span></span>
+        </div>
+        <div class="login-footer">
+          <span class="status-dot active"></span> SYSTEM ONLINE
+          <span id="login-time" class="login-time"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="dashboard-screen" class="screen hidden">
+
+    <!-- TOP BAR -->
+    <header class="topbar glass-panel">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="topbar-brand">
+          <span class="brand-glyph">⬡</span>
+          <span class="brand-name">MEX PANEL</span>
+        </div>
+      </div>
+      <div class="topbar-center">
+        <div class="global-search-bar">
+          <i class="fa fa-magnifying-glass"></i>
+          <input type="text" placeholder="Global search..." id="global-search" oninput="globalSearch(this.value)" />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-stats">
+          <div class="stat-pill"><i class="fa fa-circle-dot green"></i> <span id="stat-online">0</span> ONLINE</div>
+          <div class="stat-pill"><i class="fa fa-key"></i> <span id="stat-keys">0</span> KEYS</div>
+        </div>
+        <div class="topbar-user">
+          <div class="user-avatar" id="topbar-avatar">H</div>
+          <div class="user-info">
+            <span id="topbar-name">MEX</span>
+            <span id="topbar-role" class="role-badge">OWNER</span>
+          </div>
+          <button class="btn-icon danger" onclick="logout()" title="Logout">
+            <i class="fa fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- GLOBAL ANNOUNCEMENT BAR -->
+    <div id="announcement-bar" class="announcement-bar hidden">
+      <i class="fa fa-bullhorn"></i>
+      <span id="announcement-text"></span>
+      <button onclick="closeAnnouncement()"><i class="fa fa-xmark"></i></button>
+    </div>
+
+    <!-- LAYOUT WRAPPER -->
+    <div class="dashboard-layout">
+
+      <!-- SIDEBAR -->
+      <aside id="sidebar" class="sidebar glass-panel">
+        <nav class="sidebar-nav">
+          <div class="nav-section-label">MAIN</div>
+          <a class="nav-item active" onclick="showSection('overview')" data-section="overview">
+            <i class="fa fa-gauge-high"></i><span>Overview</span>
+          </a>
+          <a class="nav-item" onclick="showSection('keygen')" data-section="keygen">
+            <i class="fa fa-wand-magic-sparkles"></i><span>Key Generator</span>
+          </a>
+          <a class="nav-item" onclick="showSection('keymanage')" data-section="keymanage">
+            <i class="fa fa-key"></i><span>Key Manager</span>
+          </a>
+          <a class="nav-item" onclick="showSection('users')" data-section="users">
+            <i class="fa fa-users"></i><span>User Monitor</span>
+          </a>
+          <a class="nav-item" onclick="showSection('security')" data-section="security">
+            <i class="fa fa-shield-halved"></i><span>Security</span>
+          </a>
+          <a class="nav-item" onclick="showSection('reports')" data-section="reports">
+            <i class="fa fa-chart-bar"></i><span>Reports</span>
+          </a>
+
+          <!-- OWNER ONLY -->
+          <div class="nav-section-label owner-only hidden">OWNER CONTROLS</div>
+          <a class="nav-item owner-only hidden" onclick="showSection('admins')" data-section="admins">
+            <i class="fa fa-user-shield"></i><span>Admin Manager</span>
+          </a>
+          <a class="nav-item owner-only hidden" onclick="showSection('systemcfg')" data-section="systemcfg">
+            <i class="fa fa-sliders"></i><span>System Config</span>
+          </a>
+          <a class="nav-item owner-only hidden" onclick="showSection('devtools')" data-section="devtools">
+            <i class="fa fa-code"></i><span>Dev Tools</span>
+          </a>
+          <a class="nav-item owner-only hidden" onclick="showSection('revenue')" data-section="revenue">
+            <i class="fa fa-coins"></i><span>Revenue</span>
+          </a>
+
+          <div class="nav-section-label">ACCOUNT</div>
+          <a class="nav-item" onclick="showSection('audit')" data-section="audit">
+            <i class="fa fa-scroll"></i><span>Audit Logs</span>
+          </a>
+          <a class="nav-item" onclick="showSection('myaccount')" data-section="myaccount">
+            <i class="fa fa-circle-user"></i><span>My Account</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="system-health">
+            <span class="status-dot active"></span>
+            <span>FIREBASE CONNECTED</span>
+          </div>
+          <div id="sidebar-clock" class="sidebar-clock"></div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="main-content" id="main-content">
+
+        <!-- ===== OVERVIEW ===== -->
+        <section id="section-overview" class="content-section active">
+          <div class="section-header">
+            <h2><i class="fa fa-gauge-high"></i> OVERVIEW</h2>
+            <div class="section-actions">
+              <button class="btn-sm" onclick="refreshOverview()"><i class="fa fa-rotate"></i> Refresh</button>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon"><i class="fa fa-key"></i></div>
+              <div class="stat-data"><span id="ov-total-keys">0</span><label>Total Keys</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon green"><i class="fa fa-circle-check"></i></div>
+              <div class="stat-data"><span id="ov-active-keys">0</span><label>Active Keys</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon red"><i class="fa fa-ban"></i></div>
+              <div class="stat-data"><span id="ov-banned-keys">0</span><label>Banned Keys</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon yellow"><i class="fa fa-snowflake"></i></div>
+              <div class="stat-data"><span id="ov-frozen-keys">0</span><label>Frozen Keys</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon"><i class="fa fa-users"></i></div>
+              <div class="stat-data"><span id="ov-total-users">0</span><label>Total Users</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon green"><i class="fa fa-wifi"></i></div>
+              <div class="stat-data"><span id="ov-online-users">0</span><label>Online Now</label></div>
+            </div>
+          </div>
+
+          <!-- QUICK ACTIONS -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-bolt"></i> QUICK ACTIONS</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="quick-actions-grid">
+                <button class="qa-btn" onclick="showSection('keygen')"><i class="fa fa-plus"></i> Generate Key</button>
+                <button class="qa-btn" onclick="showSection('keymanage')"><i class="fa fa-list"></i> View Keys</button>
+                <button class="qa-btn" onclick="showSection('users')"><i class="fa fa-eye"></i> Monitor Users</button>
+                <button class="qa-btn danger" onclick="triggerKillswitch()"><i class="fa fa-skull-crossbones"></i> Killswitch</button>
+                <button class="qa-btn" onclick="showSection('audit')"><i class="fa fa-scroll"></i> Audit Log</button>
+                <button class="qa-btn" onclick="showSection('security')"><i class="fa fa-shield-halved"></i> Security</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT ACTIVITY -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-clock-rotate-left"></i> RECENT ACTIVITY</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div id="recent-activity-list" class="activity-list">
+                <div class="activity-item"><span class="activity-badge info">INFO</span> Panel initialized</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== KEY GENERATOR ===== -->
+        <section id="section-keygen" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-wand-magic-sparkles"></i> KEY GENERATOR</h2>
+          </div>
+
+          <!-- SINGLE KEY GEN -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-key"></i> SINGLE KEY GENERATION</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label><i class="fa fa-tag"></i> PREFIX</label>
+                  <input type="text" id="kg-prefix" placeholder="e.g. WINTER" maxlength="12" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-clock"></i> DURATION</label>
+                  <select id="kg-duration">
+                    <option value="trial">Trial (2h)</option>
+                    <option value="1h">1 Hour</option>
+                    <option value="6h">6 Hours</option>
+                    <option value="12h">12 Hours</option>
+                    <option value="1d" selected>1 Day</option>
+                    <option value="3d">3 Days</option>
+                    <option value="7d">7 Days</option>
+                    <option value="14d">14 Days</option>
+                    <option value="30d">1 Month</option>
+                    <option value="90d">3 Months</option>
+                    <option value="180d">6 Months</option>
+                    <option value="365d">1 Year</option>
+                    <option value="lifetime">Lifetime</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-mobile-screen"></i> DEVICE LIMIT</label>
+                  <input type="number" id="kg-limit" placeholder="1" min="1" max="99" value="1" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-layer-group"></i> KEY TYPE</label>
+                  <select id="kg-type">
+                    <option value="standard">Standard</option>
+                    <option value="trial">Trial</option>
+                    <option value="reseller">Reseller</option>
+                    <option value="vip">VIP</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-globe"></i> GEO-LOCK (Optional)</label>
+                  <input type="text" id="kg-geo" placeholder="e.g. US, PH, JP" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-note-sticky"></i> INTERNAL NOTE</label>
+                  <input type="text" id="kg-note" placeholder="Staff-only note..." />
+                </div>
+              </div>
+              <div class="toggle-group">
+                <label class="toggle-label">
+                  <input type="checkbox" id="kg-hwid-lock" checked />
+                  <span class="toggle-switch"></span>
+                  HWID Lock
+                </label>
+                <label class="toggle-label">
+                  <input type="checkbox" id="kg-vpn-block" />
+                  <span class="toggle-switch"></span>
+                  Block VPN
+                </label>
+                <label class="toggle-label">
+                  <input type="checkbox" id="kg-vm-block" />
+                  <span class="toggle-switch"></span>
+                  Block VM
+                </label>
+              </div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="generateSingleKey()">
+                  <i class="fa fa-wand-magic-sparkles"></i> GENERATE KEY
+                </button>
+              </div>
+              <div id="keygen-result" class="keygen-result hidden">
+                <div class="result-key-box">
+                  <span id="generated-key-display"></span>
+                  <button onclick="copyKey('generated-key-display')"><i class="fa fa-copy"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BULK KEY GEN -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-layer-group"></i> BULK KEY GENERATION</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label><i class="fa fa-tag"></i> PREFIX</label>
+                  <input type="text" id="bk-prefix" placeholder="e.g. BULK" maxlength="12" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-clock"></i> DURATION</label>
+                  <select id="bk-duration">
+                    <option value="1d" selected>1 Day</option>
+                    <option value="7d">7 Days</option>
+                    <option value="30d">1 Month</option>
+                    <option value="365d">1 Year</option>
+                    <option value="lifetime">Lifetime</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-hashtag"></i> QUANTITY (max 1000)</label>
+                  <input type="number" id="bk-qty" placeholder="10" min="1" max="1000" value="10" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fa fa-mobile-screen"></i> DEVICE LIMIT</label>
+                  <input type="number" id="bk-limit" placeholder="1" min="1" max="99" value="1" />
+                </div>
+              </div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="generateBulkKeys()">
+                  <i class="fa fa-layer-group"></i> GENERATE BULK
+                </button>
+                <button class="btn-secondary" onclick="exportBulkKeys()">
+                  <i class="fa fa-file-export"></i> EXPORT
+                </button>
+              </div>
+              <div id="bulk-result" class="bulk-result hidden">
+                <div class="bulk-result-header">
+                  <span id="bulk-count-label">Generated 0 keys</span>
+                  <div class="export-btns">
+                    <button onclick="exportFormat('txt')"><i class="fa fa-file-lines"></i> TXT</button>
+                    <button onclick="exportFormat('csv')"><i class="fa fa-file-csv"></i> CSV</button>
+                    <button onclick="exportFormat('json')"><i class="fa fa-file-code"></i> JSON</button>
+                  </div>
+                </div>
+                <div id="bulk-keys-list" class="bulk-keys-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== KEY MANAGER ===== -->
+        <section id="section-keymanage" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-key"></i> KEY MANAGER</h2>
+            <div class="section-actions">
+              <input type="text" id="key-search" placeholder="Search keys..." oninput="filterKeys(this.value)" class="search-input" />
+              <select id="key-filter-status" onchange="filterKeys()" class="filter-select">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="banned">Banned</option>
+                <option value="frozen">Frozen</option>
+              </select>
+              <button class="btn-sm danger" onclick="batchDeleteExpired()"><i class="fa fa-trash"></i> Clear Expired</button>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-list"></i> ALL KEYS</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="table-wrapper">
+                <table class="data-table" id="keys-table">
+                  <thead>
+                    <tr>
+                      <th>KEY</th>
+                      <th>STATUS</th>
+                      <th>TYPE</th>
+                      <th>DURATION</th>
+                      <th>DEVICES</th>
+                      <th>CREATED BY</th>
+                      <th>CREATED</th>
+                      <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="keys-tbody">
+                    <tr><td colspan="8" class="empty-row">No keys found. Generate some!</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== USER MONITOR ===== -->
+        <section id="section-users" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-users"></i> USER MONITOR</h2>
+            <div class="section-actions">
+              <input type="text" placeholder="Search users..." class="search-input" oninput="filterUsers(this.value)" />
+            </div>
+          </div>
+
+          <!-- REAL-TIME ONLINE -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-circle-dot green"></i> CURRENTLY ONLINE</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div id="online-users-grid" class="user-grid">
+                <div class="empty-state"><i class="fa fa-wifi"></i> No users currently online</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ALL USERS TABLE -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-database"></i> ALL USERS</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="table-wrapper">
+                <table class="data-table" id="users-table">
+                  <thead>
+                    <tr>
+                      <th>USERNAME</th>
+                      <th>KEY</th>
+                      <th>STATUS</th>
+                      <th>OS</th>
+                      <th>IP</th>
+                      <th>HWID</th>
+                      <th>LAST SEEN</th>
+                      <th>ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-tbody">
+                    <tr><td colspan="8" class="empty-row">No users registered yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- USER DETAILS MODAL SECTION -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-chart-line"></i> ACTIVITY MONITORING TOOLS</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="tools-grid">
+                <div class="tool-card glass-panel squircle" onclick="openTool('login-history')">
+                  <i class="fa fa-clock-rotate-left"></i>
+                  <span>Login History</span>
+                </div>
+                <div class="tool-card glass-panel squircle" onclick="openTool('failed-logins')">
+                  <i class="fa fa-triangle-exclamation"></i>
+                  <span>Failed Logins</span>
+                </div>
+                <div class="tool-card glass-panel squircle" onclick="openTool('activity-heatmap')">
+                  <i class="fa fa-fire"></i>
+                  <span>Activity Heatmap</span>
+                </div>
+                <div class="tool-card glass-panel squircle" onclick="openTool('trust-scores')">
+                  <i class="fa fa-star-half-stroke"></i>
+                  <span>Trust Scores</span>
+                </div>
+                <div class="tool-card glass-panel squircle" onclick="openTool('hardware-specs')">
+                  <i class="fa fa-microchip"></i>
+                  <span>Hardware Specs</span>
+                </div>
+                <div class="tool-card glass-panel squircle" onclick="openTool('injection-log')">
+                  <i class="fa fa-bug-slash"></i>
+                  <span>Injection Logs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SECURITY ===== -->
+        <section id="section-security" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-shield-halved"></i> SECURITY CENTER</h2>
+          </div>
+
+          <!-- GLOBAL KILLSWITCH -->
+          <div class="glass-panel squircle panel-section danger-panel">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-skull-crossbones"></i> GLOBAL KILLSWITCH</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <p class="warning-text">⚠️ This will immediately disconnect ALL users and block all logins except the Owner.</p>
+              <div class="btn-row">
+                <button class="btn-danger large-btn" onclick="triggerKillswitch()">
+                  <i class="fa fa-skull-crossbones"></i> ACTIVATE KILLSWITCH
+                </button>
+                <button class="btn-secondary large-btn" onclick="deactivateKillswitch()">
+                  <i class="fa fa-power-off"></i> DEACTIVATE
+                </button>
+              </div>
+              <div id="killswitch-status" class="status-display">
+                STATUS: <span id="ks-status-text" class="green">INACTIVE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECURITY TOGGLES -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-toggle-on"></i> DETECTION MODULES</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="toggle-grid">
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-desktop"></i>
+                    <div><strong>VM Detection</strong><small>Block Virtual Machines</small></div>
+                  </div>
+                  <label class="toggle-label"><input type="checkbox" id="sec-vm" onchange="updateSecSetting('vmDetection', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-mask"></i>
+                    <div><strong>VPN/Proxy Block</strong><small>Block anonymized connections</small></div>
+                  </div>
+                  <label class="toggle-label"><input type="checkbox" id="sec-vpn" onchange="updateSecSetting('vpnBlock', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-bug"></i>
+                    <div><strong>Debugger Detection</strong><small>Detect and block debuggers</small></div>
+                  </div>
+                  <label class="toggle-label"><input type="checkbox" id="sec-dbg" onchange="updateSecSetting('debuggerDetect', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-memory"></i>
+                    <div><strong>Memory Manipulation</strong><small>Auto-ban on memory tampering</small></div>
+                  </div>
+                  <label class="toggle-label"><input type="checkbox" id="sec-mem" onchange="updateSecSetting('memoryProtect', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-syringe"></i>
+                    <div><strong>Injection Detection</strong><small>Log all injection attempts</small></div>
+                  </div>
+                  <label class="toggle-label"><input type="checkbox" id="sec-inj" onchange="updateSecSetting('injectionDetect', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info">
+                    <i class="fa fa-network-wired"></i>
+                    <div><strong>IP Change Limit</strong><small>Max IP changes per day</small></div>
+                  </div>
+                  <div class="num-input-sm">
+                    <input type="number" id="sec-ip-limit" value="3" min="1" max="10" onchange="updateSecSetting('maxIpChanges', this.value)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLACKLIST -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-ban"></i> IP & HWID BLACKLIST</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-row">
+                <input type="text" id="blacklist-input" placeholder="Enter IP or HWID to blacklist..." class="flex-input" />
+                <select id="blacklist-type">
+                  <option value="ip">IP Address</option>
+                  <option value="hwid">HWID</option>
+                </select>
+                <button class="btn-danger" onclick="addToBlacklist()"><i class="fa fa-plus"></i> Blacklist</button>
+              </div>
+              <div id="blacklist-items" class="blacklist-list">
+                <div class="empty-state">No blacklisted entries</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== REPORTS ===== -->
+        <section id="section-reports" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-chart-bar"></i> REPORTS & ANALYTICS</h2>
+          </div>
+
+          <div class="reports-grid">
+            <div class="glass-panel squircle panel-section">
+              <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+                <span><i class="fa fa-chart-line"></i> KEYS GENERATED (7 DAYS)</span>
+                <i class="fa fa-chevron-down collapse-icon"></i>
+              </div>
+              <div class="panel-section-body">
+                <canvas id="keys-chart" height="200"></canvas>
+              </div>
+            </div>
+            <div class="glass-panel squircle panel-section">
+              <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+                <span><i class="fa fa-pie-chart"></i> KEY STATUS DISTRIBUTION</span>
+                <i class="fa fa-chevron-down collapse-icon"></i>
+              </div>
+              <div class="panel-section-body">
+                <canvas id="status-chart" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-server"></i> SYSTEM HEALTH</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="health-grid">
+                <div class="health-item"><label>Firebase</label><div class="health-bar"><div class="health-fill" style="width:98%"></div></div><span>98%</span></div>
+                <div class="health-item"><label>API Latency</label><div class="health-bar"><div class="health-fill yellow" style="width:72%"></div></div><span>72ms</span></div>
+                <div class="health-item"><label>DB Reads</label><div class="health-bar"><div class="health-fill" style="width:45%"></div></div><span>4.5k/10k</span></div>
+                <div class="health-item"><label>DB Writes</label><div class="health-bar"><div class="health-fill" style="width:30%"></div></div><span>3k/10k</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-table"></i> ADMIN PRODUCTIVITY</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="table-wrapper">
+                <table class="data-table" id="productivity-table">
+                  <thead><tr><th>ADMIN</th><th>ROLE</th><th>KEYS MADE</th><th>ACTIONS</th><th>LAST ACTIVE</th></tr></thead>
+                  <tbody id="productivity-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== ADMIN MANAGER (OWNER ONLY) ===== -->
+        <section id="section-admins" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-user-shield"></i> ADMIN MANAGER</h2>
+            <div class="section-actions">
+              <button class="btn-primary" onclick="openAddAdminModal()">
+                <i class="fa fa-user-plus"></i> Add Admin
+              </button>
+            </div>
+          </div>
+
+          <div class="admins-grid" id="admins-grid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ===== SYSTEM CONFIG (OWNER ONLY) ===== -->
+        <section id="section-systemcfg" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-sliders"></i> SYSTEM CONFIGURATION</h2>
+          </div>
+
+          <!-- BRANDING -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-paintbrush"></i> BRANDING & APPEARANCE</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Panel Name</label>
+                  <input type="text" id="cfg-panel-name" placeholder="MEX ADMIN PANEL" />
+                </div>
+                <div class="form-group">
+                  <label>Panel Subtitle</label>
+                  <input type="text" id="cfg-panel-sub" placeholder="SECURE OPERATIONS CENTER" />
+                </div>
+                <div class="form-group">
+                  <label>Theme</label>
+                  <select id="cfg-theme" onchange="applyTheme(this.value)">
+                    <option value="dark">Dark (Default)</option>
+                    <option value="light">Light</option>
+                    <option value="red">Red Accent</option>
+                    <option value="blue">Blue Accent</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn-primary" onclick="saveBranding()"><i class="fa fa-floppy-disk"></i> Save Branding</button>
+            </div>
+          </div>
+
+          <!-- ANNOUNCEMENT -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-bullhorn"></i> GLOBAL ANNOUNCEMENT</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-group">
+                <label>Announcement Text</label>
+                <input type="text" id="cfg-announcement" placeholder="Enter announcement for all admins..." />
+              </div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="setAnnouncement()"><i class="fa fa-bullhorn"></i> Set Announcement</button>
+                <button class="btn-secondary" onclick="clearAnnouncement()"><i class="fa fa-xmark"></i> Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SYSTEM TOGGLES -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-gear"></i> SYSTEM TOGGLES</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="toggle-grid">
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info"><i class="fa fa-door-open"></i><div><strong>Registration Open</strong><small>Allow new user sign-ups</small></div></div>
+                  <label class="toggle-label"><input type="checkbox" id="sys-registration" onchange="updateSysSetting('registrationOpen', this.checked)" checked /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info"><i class="fa fa-tools"></i><div><strong>Maintenance Mode</strong><small>Block all non-owner logins</small></div></div>
+                  <label class="toggle-label"><input type="checkbox" id="sys-maintenance" onchange="updateSysSetting('maintenanceMode', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info"><i class="fa fa-lock"></i><div><strong>2FA Enforcement</strong><small>Require 2FA for all staff</small></div></div>
+                  <label class="toggle-label"><input type="checkbox" id="sys-2fa" onchange="updateSysSetting('enforce2FA', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+                <div class="toggle-card glass-panel squircle">
+                  <div class="toggle-card-info"><i class="fa fa-trash"></i><div><strong>Auto-Delete Logs</strong><small>After 30 days</small></div></div>
+                  <label class="toggle-label"><input type="checkbox" id="sys-autodelete" onchange="updateSysSetting('autoDeleteLogs', this.checked)" /><span class="toggle-switch"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WEBHOOKS -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fab fa-discord"></i> WEBHOOK CONFIGURATION</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-group">
+                <label>Discord Webhook URL</label>
+                <div class="input-wrapper">
+                  <input type="password" id="cfg-discord-webhook" placeholder="https://discord.com/api/webhooks/..." />
+                  <button class="eye-toggle" onclick="toggleVisibility('cfg-discord-webhook', this)"><i class="fa fa-eye-slash"></i></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Slack Webhook URL</label>
+                <input type="text" id="cfg-slack-webhook" placeholder="https://hooks.slack.com/..." />
+              </div>
+              <div class="form-group">
+                <label>Max Simultaneous Sessions</label>
+                <input type="number" id="cfg-max-sessions" value="5" min="1" max="50" />
+              </div>
+              <button class="btn-primary" onclick="saveWebhooks()"><i class="fa fa-floppy-disk"></i> Save</button>
+            </div>
+          </div>
+
+          <!-- BACKUP -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-database"></i> DATABASE BACKUP</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="btn-row">
+                <button class="btn-primary" onclick="backupDatabase()"><i class="fa fa-download"></i> Export Backup</button>
+                <button class="btn-secondary" onclick="openRestoreModal()"><i class="fa fa-upload"></i> Restore</button>
+              </div>
+              <div id="backup-log" class="log-output">Ready for backup...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== DEV TOOLS (OWNER ONLY) ===== -->
+        <section id="section-devtools" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-code"></i> DEV TOOLS</h2>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-terminal"></i> FIRESTORE BROWSER</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-row">
+                <input type="text" id="fb-collection" placeholder="Collection path (e.g. keys)" class="flex-input" />
+                <button class="btn-primary" onclick="browseCollection()"><i class="fa fa-search"></i> Browse</button>
+              </div>
+              <div id="fb-browser-output" class="code-output">// Results will appear here...</div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-vials"></i> SANDBOX MODE</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <p class="info-text">Test features without affecting live data.</p>
+              <label class="toggle-label">
+                <input type="checkbox" id="sandbox-mode" onchange="toggleSandbox(this.checked)" />
+                <span class="toggle-switch"></span>
+                Enable Sandbox Mode
+              </label>
+              <div id="sandbox-notice" class="info-banner hidden">🧪 Sandbox mode active. No data will be written to the live database.</div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-upload"></i> CSV IMPORT</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <p class="info-text">Import keys or users from a CSV file.</p>
+              <div class="file-drop-zone" id="csv-drop" onclick="document.getElementById('csv-file').click()">
+                <i class="fa fa-file-csv"></i>
+                <span>Drop CSV file here or click to browse</span>
+                <input type="file" id="csv-file" accept=".csv" class="hidden" onchange="importCSV(this)" />
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-server"></i> SYSTEM HEALTH CHECK</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <button class="btn-primary" onclick="runHealthCheck()"><i class="fa fa-heart-pulse"></i> Run Health Check</button>
+              <div id="health-output" class="code-output">// Click to run...</div>
+            </div>
+          </div>
+
+          <!-- LUA API ENDPOINT INFO -->
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-link"></i> LUA API ENDPOINT</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <p class="info-text">Use this Firebase URL in your Lua scripts for key validation:</p>
+              <div class="result-key-box">
+                <span id="lua-api-url">https://anox-hyd-admin-panel-default-rtdb.firebaseio.com/keys.json</span>
+                <button onclick="copyKey('lua-api-url')"><i class="fa fa-copy"></i></button>
+              </div>
+              <div class="code-output" style="margin-top:12px">
+-- Lua example validation<br>
+local response = game:GetService("HttpService"):GetAsync(<br>
+&nbsp;&nbsp;"https://anox-hyd-admin-panel-default-rtdb.firebaseio.com/keys/&lt;KEY&gt;.json"<br>
+)<br>
+local data = game:GetService("HttpService"):JSONDecode(response)<br>
+if data and data.status == "active" then<br>
+&nbsp;&nbsp;-- Key is valid!<br>
+end
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== REVENUE (OWNER ONLY) ===== -->
+        <section id="section-revenue" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-coins"></i> REVENUE & BUSINESS</h2>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon green"><i class="fa fa-dollar-sign"></i></div>
+              <div class="stat-data"><span id="rev-today">$0</span><label>Today</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon"><i class="fa fa-calendar-week"></i></div>
+              <div class="stat-data"><span id="rev-week">$0</span><label>This Week</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon"><i class="fa fa-calendar-days"></i></div>
+              <div class="stat-data"><span id="rev-month">$0</span><label>This Month</label></div>
+            </div>
+            <div class="stat-card glass-panel squircle">
+              <div class="stat-icon yellow"><i class="fa fa-percent"></i></div>
+              <div class="stat-data"><span id="rev-churn">0%</span><label>Churn Rate</label></div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-ticket"></i> COUPON CODES</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Coupon Code</label>
+                  <input type="text" id="coupon-code" placeholder="e.g. SAVE20" />
+                </div>
+                <div class="form-group">
+                  <label>Discount %</label>
+                  <input type="number" id="coupon-discount" placeholder="20" min="1" max="100" />
+                </div>
+                <div class="form-group">
+                  <label>Expires</label>
+                  <input type="date" id="coupon-expires" />
+                </div>
+                <div class="form-group">
+                  <label>Max Uses</label>
+                  <input type="number" id="coupon-uses" placeholder="100" />
+                </div>
+              </div>
+              <button class="btn-primary" onclick="createCoupon()"><i class="fa fa-plus"></i> Create Coupon</button>
+              <div id="coupons-list" class="coupons-list"></div>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-handshake"></i> RESELLER MANAGEMENT</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="form-row">
+                <input type="text" id="reseller-name" placeholder="Reseller username..." class="flex-input" />
+                <input type="number" id="reseller-discount" placeholder="% discount" style="width:120px" />
+                <button class="btn-primary" onclick="addReseller()"><i class="fa fa-plus"></i> Add</button>
+              </div>
+              <div id="resellers-list" class="empty-state">No resellers added</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== AUDIT LOGS ===== -->
+        <section id="section-audit" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-scroll"></i> AUDIT LOGS</h2>
+            <div class="section-actions">
+              <button class="btn-sm" onclick="exportAuditLogs()"><i class="fa fa-download"></i> Export</button>
+              <button class="btn-sm danger" onclick="clearAuditLogs()"><i class="fa fa-trash"></i> Clear</button>
+            </div>
+          </div>
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-list"></i> ALL LOGS</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead><tr><th>TIME</th><th>ADMIN</th><th>ACTION</th><th>TARGET</th><th>DETAILS</th></tr></thead>
+                  <tbody id="audit-tbody">
+                    <tr><td colspan="5" class="empty-row">No audit logs yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== MY ACCOUNT ===== -->
+        <section id="section-myaccount" class="content-section hidden">
+          <div class="section-header">
+            <h2><i class="fa fa-circle-user"></i> MY ACCOUNT</h2>
+          </div>
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-id-card"></i> PROFILE</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div class="profile-display">
+                <div class="profile-avatar" id="profile-avatar">H</div>
+                <div class="profile-info">
+                  <h3 id="profile-name">HYD</h3>
+                  <span id="profile-role-badge" class="role-badge">OWNER</span>
+                  <p id="profile-key-display" class="profile-key"></p>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Display Name</label>
+                  <input type="text" id="acc-name" placeholder="Your display name" />
+                </div>
+                <div class="form-group">
+                  <label>New Password/Key</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="acc-newkey" placeholder="New access key..." />
+                    <button class="eye-toggle" onclick="toggleVisibility('acc-newkey', this)"><i class="fa fa-eye-slash"></i></button>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-primary" onclick="saveAccountChanges()"><i class="fa fa-floppy-disk"></i> Save Changes</button>
+            </div>
+          </div>
+
+          <div class="glass-panel squircle panel-section">
+            <div class="panel-section-header collapsible" onclick="toggleCollapse(this)">
+              <span><i class="fa fa-clock-rotate-left"></i> MY LOGIN HISTORY</span>
+              <i class="fa fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="panel-section-body">
+              <div id="my-login-history" class="activity-list">
+                <div class="activity-item"><span class="activity-badge info">LOGIN</span> Current session</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /.dashboard-layout -->
+  </div><!-- /#dashboard-screen -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- GENERIC MODAL -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+    <div class="modal-box glass-panel squircle-lg" id="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Modal</h3>
+        <button class="btn-icon" onclick="closeModal()"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast-container"></div>
+
+  <!-- CONTEXT MENU -->
+  <div id="context-menu" class="context-menu glass-panel hidden">
+    <div id="context-menu-items"></div>
+  </div>
+
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <!-- CHART.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+  <!-- SOUNDS ENGINE (load first) -->
+  <script src="sounds.js"></script>
+
+  <!-- MAIN APP -->
+  <script src="app.js"></script>
+
+  <!-- FIREBASE API LAYER (load after app) -->
+  <script src="firebase-api.js"></script>
+
+  <!-- UI EFFECTS -->
+  <script src="ui-effects.js"></script>
+
+  <!-- ADMIN MODULES (load last) -->
+  <script src="admin-modules.js"></script>
+</body>
+</html>
