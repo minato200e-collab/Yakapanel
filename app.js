@@ -46,6 +46,18 @@ const DEFAULT_ADMINS = {
     color: "#5ee7ff",
     createdAt: Date.now(),
     lastActive: Date.now()
+      },
+  "Hyd": {
+    name: "Hyd",
+    key: "Hyd",
+    role: "co-owner",
+    roleName: "CO-OWNER",
+    keysCreated: 0,
+    actionsCount: 0,
+    status: "active",
+    color: "#5ee7ff",
+    createdAt: Date.now(),
+    lastActive: Date.now()
   }
 };
 
